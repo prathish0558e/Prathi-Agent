@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { SupabaseConfigCard } from '../components/SupabaseConfigCard';
-import { AnimatedLogo } from '../components/AnimatedLogo';
 import { isSupabaseConfigured } from '../lib/runtimeConfig';
 
 export function Login() {
@@ -34,11 +33,6 @@ export function Login() {
   return (
     <div className="app-shell flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Animated Logo at Top */}
-        <div className="mb-8 flex justify-center">
-          <AnimatedLogo size="md" showText={false} animated={true} />
-        </div>
-
         <div className="app-surface p-6">
         <div className="mb-6 text-center">
           <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground mx-auto flex items-center justify-center mb-4 shadow-[0_12px_24px_rgba(15,61,62,0.25)]">
