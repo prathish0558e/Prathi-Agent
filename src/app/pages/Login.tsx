@@ -36,7 +36,7 @@ export function Login() {
       <div className="w-full max-w-md">
         {/* Animated Logo at Top */}
         <div className="mb-8 flex justify-center">
-          <AnimatedLogo size="md" showText={true} animated={true} />
+          <AnimatedLogo size="md" showText={false} animated={true} />
         </div>
 
         <div className="app-surface p-6">

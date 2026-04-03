@@ -31,11 +31,11 @@ export function AnimatedLogo({ size = 'md', showText = true, animated = true }: 
         `}
       >
         <img
-          src="/App.png"
+          src="/app.png?v=20260403b"
           alt="Prathi Agent Logo"
           className={`w-full h-full object-contain ${animated ? 'drop-shadow-lg' : ''}`}
           onError={(e) => {
-            console.warn('Failed to load App.png from /public/App.png');
+            console.warn('Failed to load app.png from /public/app.png');
           }}
         />
       </div>

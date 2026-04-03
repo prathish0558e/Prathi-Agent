@@ -32,6 +32,7 @@ export function Onboarding() {
   const [resumeLastUpdated, setResumeLastUpdated] = useState(profile?.resumeLastUpdated ?? null);
   const [wantsAutoApply, setWantsAutoApply] = useState(profile?.wantsAutoApply ?? false);
   const [wantsMailAutomation, setWantsMailAutomation] = useState(profile?.wantsMailAutomation ?? false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
   const [geoModule, setGeoModule] = useState<GeoModule | null>(null);
   const [countries, setCountries] = useState<SelectOption[]>([]);
@@ -82,7 +83,7 @@ export function Onboarding() {
   const selectedCountryName = countries.find((country) => country.value === preferredCountryCode)?.label ?? '';
   const selectedStateName = states.find((state) => state.value === preferredStateCode)?.label ?? '';
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError('');
 
@@ -119,7 +120,7 @@ export function Onboarding() {
       .filter(Boolean)
       .join(', ');
 
-    updateProfile({
+    const nextProfile = {
       fullName: fullName.trim(),
       email,
       phoneCountryCode,
@@ -139,7 +140,16 @@ export function Onboarding() {
       resumeFileName,
       resumeLastUpdated,
       onboardingCompleted: true,
-    });
+    };
+
+    setIsSaving(true);
+    const synced = await updateProfile(nextProfile);
+    setIsSaving(false);
+
+    if (!synced) {
+      setError('Profile saved locally, but cloud sync failed. Please tap save again so the same account works across devices.');
+      return;
+    }
 
     navigate('/', { replace: true });
   };
@@ -338,8 +348,12 @@ export function Onboarding() {
 
           {error ? <p className="text-sm text-red-700">{error}</p> : null}
 
-          <button type="submit" className="w-full bg-primary text-primary-foreground font-semibold rounded-xl py-3 shadow-[0_14px_28px_rgba(15,61,62,0.2)]">
-            Save Profile and Continue
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="w-full bg-primary text-primary-foreground font-semibold rounded-xl py-3 shadow-[0_14px_28px_rgba(15,61,62,0.2)] disabled:opacity-70"
+          >
+            {isSaving ? 'Saving profile...' : 'Save Profile and Continue'}
           </button>
         </form>
       </div>

@@ -25,7 +25,7 @@ interface AuthContextValue {
   getGoogleAccessToken: () => Promise<string | null>;
   refreshGoogleAccessToken: () => Promise<string | null>;
   logout: () => void;
-  updateProfile: (profile: CareerProfile) => void;
+  updateProfile: (profile: CareerProfile) => Promise<boolean>;
 }
 
 const AUTH_EMAIL_KEY = 'career_agent_auth_email';
@@ -88,13 +88,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let cancelled = false;
 
     const syncProfile = async () => {
+      const localProfile = loadCareerProfile(email);
       const remoteProfile = await fetchRemoteProfile(email);
-      if (cancelled || !remoteProfile) {
+      if (cancelled) {
         return;
       }
 
-      const localProfile = loadCareerProfile(email);
-      if (localProfile.onboardingCompleted) {
+      if (localProfile.onboardingCompleted && (!remoteProfile || !remoteProfile.onboardingCompleted)) {
+        await saveRemoteProfile(localProfile);
+      }
+
+      if (!remoteProfile) {
+        return;
+      }
+
+      if (localProfile.onboardingCompleted && !remoteProfile.onboardingCompleted) {
         return;
       }
 
@@ -117,7 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const detectExistingUser = useCallback(
     async (userId: string, userEmail: string, fullName: string | undefined): Promise<boolean> => {
-      const localProfile = loadCareerProfile(userEmail);
+      let localProfile = loadCareerProfile(userEmail);
       if (localProfile.onboardingCompleted) {
         return true;
       }
@@ -129,11 +137,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           fullName: fullName ?? '',
         };
         saveCareerProfile(seedProfile);
+        localProfile = seedProfile;
+      }
+
+      const remoteProfile = await fetchRemoteProfile(userEmail);
+      if (remoteProfile) {
+        const mergedRemoteProfile: CareerProfile = {
+          ...localProfile,
+          ...remoteProfile,
+          email: userEmail,
+          fullName: remoteProfile.fullName || localProfile.fullName || fullName || '',
+        };
+        saveCareerProfile(mergedRemoteProfile);
+        localProfile = mergedRemoteProfile;
+
+        if (mergedRemoteProfile.onboardingCompleted) {
+          return true;
+        }
       }
 
       const supabase = getSupabaseClient();
       if (!supabase) {
-        return false;
+        return localProfile.onboardingCompleted;
       }
 
       const { data, error } = await supabase
@@ -148,12 +173,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const onboardingDone = Boolean(data?.onboarding_completed);
       if (onboardingDone) {
-        saveCareerProfile({
+        const mergedSupabaseProfile: CareerProfile = {
           ...localProfile,
           email: userEmail,
           fullName: localProfile.fullName || fullName || '',
           onboardingCompleted: true,
-        });
+        };
+        saveCareerProfile(mergedSupabaseProfile);
       }
 
       return onboardingDone;
@@ -466,10 +492,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setEmail(null);
         setProfile(null);
       },
-      updateProfile: (nextProfile: CareerProfile) => {
+      updateProfile: async (nextProfile: CareerProfile) => {
         saveCareerProfile(nextProfile);
         setProfile(nextProfile);
-        void saveRemoteProfile(nextProfile);
+        return await saveRemoteProfile(nextProfile);
       },
     }),
     [detectExistingUser, email, isAuthLoading, profile, setAuthenticatedEmail],

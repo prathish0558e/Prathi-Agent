@@ -2,7 +2,6 @@ import { CircularProgress } from '../components/CircularProgress';
 import { JobCardAdvanced } from '../components/JobCardAdvanced';
 import { BottomNav } from '../components/BottomNav';
 import { QuickProfileMenu } from '../components/QuickProfileMenu';
-import { AnimatedLogo } from '../components/AnimatedLogo';
 import { SkillRadar } from '../components/SkillRadar';
 import { StatCard } from '../components/StatCard';
 import { Mail, Send, Briefcase, Activity, MapPinned, Sparkles, Settings, AlertTriangle, CheckCircle2, RefreshCcw } from 'lucide-react';
@@ -204,11 +203,6 @@ export function Dashboard() {
 
       <div className="relative max-w-md mx-auto px-4 py-6">
         <QuickProfileMenu />
-
-        {/* Animated Logo */}
-        <div className="mb-4 flex justify-center">
-          <AnimatedLogo size="sm" showText={false} animated={true} />
-        </div>
 
         {/* Header - System Online */}
         <div className="flex items-center justify-between mb-6">

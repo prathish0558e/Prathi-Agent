@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { getOAuthCallbackParams } from '../lib/oauthCallback';
 import { getSupabaseClient } from '../lib/supabaseClient';
+import { fetchRemoteProfile } from '../lib/profileApi';
 import { loadCareerProfile } from '../lib/profileStorage';
 import { runtimeConfig } from '../lib/runtimeConfig';
 
@@ -43,6 +44,57 @@ export function AuthCallback() {
       }
 
       return `OAuth Error: ${message}. Check Supabase configuration and Google Console settings.`;
+    };
+
+    const resolveOnboardingCompleted = async (
+      userEmail: string,
+      options?: { userId?: string; fullName?: string },
+    ): Promise<boolean> => {
+      const localProfile = loadCareerProfile(userEmail);
+      if (localProfile.onboardingCompleted) {
+        return true;
+      }
+
+      const remoteProfile = await fetchRemoteProfile(userEmail);
+      if (remoteProfile) {
+        const mergedProfile = {
+          ...localProfile,
+          ...remoteProfile,
+          email: userEmail,
+          fullName: remoteProfile.fullName || localProfile.fullName || options?.fullName || '',
+        };
+        updateProfile(mergedProfile);
+        if (mergedProfile.onboardingCompleted) {
+          return true;
+        }
+      }
+
+      if (!options?.userId) {
+        return false;
+      }
+
+      const supabaseClient = getSupabaseClient();
+      if (!supabaseClient) {
+        return false;
+      }
+
+      const { data, error } = await supabaseClient
+        .from('career_profiles')
+        .select('onboarding_completed')
+        .eq('id', options.userId)
+        .maybeSingle();
+
+      if (error || !data?.onboarding_completed) {
+        return false;
+      }
+
+      updateProfile({
+        ...localProfile,
+        email: userEmail,
+        fullName: localProfile.fullName || options.fullName || '',
+        onboardingCompleted: true,
+      });
+      return true;
     };
 
     const oauthCallback = getOAuthCallbackParams();
@@ -86,24 +138,34 @@ export function AuthCallback() {
       );
       sessionStorage.removeItem(MAIL_AUTO_CONNECT_KEY);
       if (appLogin) {
-        const normalizedEmail = appEmail?.trim().toLowerCase();
-        if (!normalizedEmail) {
-          setError('Google sign-in completed but no email was returned. Please try again.');
-          return;
-        }
+        const finishDirectLogin = async () => {
+          const normalizedEmail = appEmail?.trim().toLowerCase();
+          if (!normalizedEmail) {
+            setError('Google sign-in completed but no email was returned. Please try again.');
+            return;
+          }
 
-        login(normalizedEmail, 'direct');
-        const localProfile = loadCareerProfile(normalizedEmail);
-        if (appName && !localProfile.fullName) {
-          updateProfile({ ...localProfile, fullName: appName });
-        }
+          login(normalizedEmail, 'direct');
 
-        if (localProfile.onboardingCompleted) {
-          sessionStorage.setItem(WELCOME_BACK_FLAG_KEY, 'true');
-          navigate('/', { replace: true });
-        } else {
+          const localProfile = loadCareerProfile(normalizedEmail);
+          if (appName && !localProfile.fullName) {
+            updateProfile({ ...localProfile, fullName: appName });
+          }
+
+          const onboardingCompleted = await resolveOnboardingCompleted(normalizedEmail, {
+            fullName: appName || undefined,
+          });
+
+          if (onboardingCompleted) {
+            sessionStorage.setItem(WELCOME_BACK_FLAG_KEY, 'true');
+            navigate('/', { replace: true });
+            return;
+          }
+
           navigate('/onboarding', { replace: true });
-        }
+        };
+
+        void finishDirectLogin();
         return;
       }
 
@@ -185,7 +247,12 @@ export function AuthCallback() {
       return false;
     };
 
-    const handleSession = async (session: { user?: { email?: string; id?: string }; provider_token?: string | null }) => {
+    const handleSession = async (
+      session: {
+        user?: { email?: string; id?: string; user_metadata?: { full_name?: string } };
+        provider_token?: string | null;
+      },
+    ) => {
       if (cancelled || navigatedRef.current) return;
       navigatedRef.current = true;
 
@@ -204,9 +271,13 @@ export function AuthCallback() {
       if (shouldRedirectToMail) {
         return;
       }
-      const localProfile = loadCareerProfile(userEmail);
 
-      if (localProfile.onboardingCompleted) {
+      const onboardingCompleted = await resolveOnboardingCompleted(userEmail, {
+        userId: session.user?.id,
+        fullName: session.user?.user_metadata?.full_name,
+      });
+
+      if (onboardingCompleted) {
         sessionStorage.setItem(WELCOME_BACK_FLAG_KEY, 'true');
         navigate('/', { replace: true });
       } else {
