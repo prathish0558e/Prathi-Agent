@@ -69,6 +69,10 @@ app.use(
 );
 app.use(express.json({ limit: '2mb' }));
 
+app.get('/', (_request, response) => {
+  response.json({ status: 'ok', service: 'career-agent-server', hint: 'Use /health for status checks.' });
+});
+
 app.get('/health', (_request, response) => {
   response.json({ status: 'ok', service: 'career-agent-server' });
 });
