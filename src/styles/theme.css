@@ -1,0 +1,294 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --font-body: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-display: "Fraunces", "Space Grotesk", serif;
+  --background: #fff3e7;
+  --foreground: #1f1a16;
+  --card: #fff9f1;
+  --card-foreground: #241d17;
+  --popover: #fff9f1;
+  --popover-foreground: #241d17;
+  --primary: #0b5d5e;
+  --primary-foreground: #fff7ee;
+  --secondary: #ffe6c7;
+  --secondary-foreground: #2a2018;
+  --muted: #f5e1cd;
+  --muted-foreground: #6a5240;
+  --accent: #ffd1a3;
+  --accent-foreground: #2b2017;
+  --destructive: #b4232d;
+  --destructive-foreground: #fff6f2;
+  --border: rgba(33, 24, 18, 0.14);
+  --input: transparent;
+  --input-background: #fff1de;
+  --switch-background: #e3c8a6;
+  --font-weight-medium: 600;
+  --font-weight-normal: 400;
+  --ring: #0b5d5e;
+  --chart-1: #f07b3f;
+  --chart-2: #2d9c9c;
+  --chart-3: #c44f38;
+  --chart-4: #f2b05a;
+  --chart-5: #68a37c;
+  --radius: 1rem;
+  --sidebar: #fff1e3;
+  --sidebar-foreground: #241d17;
+  --sidebar-primary: #0b5d5e;
+  --sidebar-primary-foreground: #fff5e8;
+  --sidebar-accent: #f7e0c5;
+  --sidebar-accent-foreground: #2a2119;
+  --sidebar-border: rgba(33, 24, 18, 0.1);
+  --sidebar-ring: #0b5d5e;
+  --shadow-card: 0 20px 46px rgba(15, 61, 62, 0.18);
+  --shadow-soft: 0 16px 36px rgba(247, 124, 64, 0.18);
+}
+
+.dark {
+  --background: #0f0e0d;
+  --foreground: #f8f1e8;
+  --card: #191614;
+  --card-foreground: #f8f1e8;
+  --popover: #191614;
+  --popover-foreground: #f8f1e8;
+  --primary: #64d6d7;
+  --primary-foreground: #0f0e0d;
+  --secondary: #251f1b;
+  --secondary-foreground: #f8f1e8;
+  --muted: #231d19;
+  --muted-foreground: #b89b84;
+  --accent: #2c241f;
+  --accent-foreground: #f8f1e8;
+  --destructive: #e06d73;
+  --destructive-foreground: #0f0e0d;
+  --border: rgba(248, 241, 232, 0.12);
+  --input: #1b1715;
+  --input-background: #1f1a17;
+  --ring: #64d6d7;
+  --font-weight-medium: 600;
+  --font-weight-normal: 400;
+  --chart-1: #f59d5a;
+  --chart-2: #64d6d7;
+  --chart-3: #e46b5a;
+  --chart-4: #f4b46b;
+  --chart-5: #7bb58a;
+  --sidebar: #0f0e0d;
+  --sidebar-foreground: #f8f1e8;
+  --sidebar-primary: #64d6d7;
+  --sidebar-primary-foreground: #0f0e0d;
+  --sidebar-accent: #241f1b;
+  --sidebar-accent-foreground: #f8f1e8;
+  --sidebar-border: rgba(248, 241, 232, 0.12);
+  --sidebar-ring: #64d6d7;
+  --shadow-card: 0 24px 54px rgba(0, 0, 0, 0.35);
+  --shadow-soft: 0 18px 42px rgba(0, 0, 0, 0.3);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    color-scheme: light;
+  }
+
+  .dark body {
+    color-scheme: dark;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    font-family: var(--font-display);
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    font-family: var(--font-display);
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    font-family: var(--font-body);
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    font-family: var(--font-body);
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+    font-family: var(--font-body);
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes aurora {
+  0% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 20%, 0% 20%, 50% 80%, 0% 0%;
+  }
+
+  100% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(33, 24, 18, 0.16);
+    background: linear-gradient(145deg, rgba(255, 250, 242, 0.9), rgba(255, 227, 205, 0.8));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .app-shell {
+    min-height: 100vh;
+    background:
+      radial-gradient(900px 480px at 6% -10%, rgba(255, 147, 93, 0.32), transparent 60%),
+      radial-gradient(860px 520px at 95% 5%, rgba(84, 200, 203, 0.26), transparent 62%),
+      radial-gradient(860px 520px at 50% 120%, rgba(255, 205, 139, 0.32), transparent 65%),
+      linear-gradient(180deg, #fff4ea 0%, #f2dfc9 100%);
+    background-size: 160% 160%, 160% 160%, 160% 160%, 100% 100%;
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
+    animation: aurora 20s ease-in-out infinite;
+    color: var(--foreground);
+  }
+
+  .dark .app-shell {
+    background:
+      radial-gradient(900px 520px at 5% -15%, rgba(100, 214, 215, 0.22), transparent 60%),
+      radial-gradient(920px 520px at 95% 0%, rgba(242, 161, 90, 0.18), transparent 62%),
+      radial-gradient(960px 520px at 50% 120%, rgba(111, 168, 127, 0.16), transparent 65%),
+      linear-gradient(180deg, #0f0e0d 0%, #171311 100%);
+    background-size: 170% 170%, 170% 170%, 170% 170%, 100% 100%;
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 0%;
+    animation: aurora 22s ease-in-out infinite;
+  }
+
+  .app-surface {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 241, 223, 0.9));
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 0.25rem);
+    box-shadow: var(--shadow-card);
+  }
+
+  .dark .app-surface {
+    background: linear-gradient(160deg, rgba(28, 24, 21, 0.92), rgba(18, 16, 14, 0.9));
+    border: 1px solid var(--border);
+  }
+
+  .reveal-up {
+    opacity: 0;
+    animation: reveal-up 520ms ease-out forwards;
+  }
+}

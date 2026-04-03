@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+.vscode/
+.idea/
+.sixth/
+*.iml
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# Android build outputs
+android/.gradle/
+android/**/build/
+server/storage/
