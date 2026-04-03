@@ -1,4 +1,4 @@
-import { Home, Briefcase, FileText, Settings, Compass, GraduationCap } from 'lucide-react';
+import { Home, Briefcase, FileText, Compass, GraduationCap } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router';
 
 interface NavItem {
@@ -17,7 +17,6 @@ export function BottomNav() {
     { icon: <GraduationCap className="w-5 h-5" />, label: 'University', path: '/university-admission' },
     { icon: <Compass className="w-5 h-5" />, label: 'Nearby', path: '/local-tracker' },
     { icon: <FileText className="w-5 h-5" />, label: 'Resume', path: '/ai-resume' },
-    { icon: <Settings className="w-5 h-5" />, label: 'Settings', path: '/settings' },
   ];
 
   return (

@@ -15,6 +15,7 @@ const EMAIL_RECONNECT_COOLDOWN_MS = 3 * 60 * 1000;
 const EMAIL_RECONNECT_TS_KEY = 'career_agent_email_reconnect_attempt_at';
 const EMAIL_SEEN_IDS_KEY = 'career_agent_email_seen_ids';
 const EMAIL_ALERTS_ENABLED_KEY = 'career_agent_email_alerts_enabled';
+const EMAIL_UNREAD_COUNT_KEY = 'career_agent_email_unread_count';
 
 const canNotifyEmailReplies = () => {
   if (typeof window === 'undefined' || !('Notification' in window)) {
@@ -175,6 +176,7 @@ export function EmailLogs() {
         EMAIL_SEEN_IDS_KEY,
         JSON.stringify(payload.recentActivity.map((mail) => String(mail.id))),
       );
+      localStorage.setItem(EMAIL_UNREAD_COUNT_KEY, '0');
     } catch (loadError) {
       const message = loadError instanceof Error ? loadError.message : 'Unable to load mail logs.';
       setTokenStatus('Google Mail not connected yet.');
@@ -187,6 +189,7 @@ export function EmailLogs() {
 
   useEffect(() => {
     void loadSummary();
+    localStorage.setItem(EMAIL_UNREAD_COUNT_KEY, '0');
     
     // Set up periodic refresh every 5 minutes
     const pollingInterval = setInterval(() => {
@@ -201,8 +204,8 @@ export function EmailLogs() {
   return (
     <div className="app-shell pb-24">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-300/20 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-md mx-auto px-4 py-6">
