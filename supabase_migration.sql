@@ -61,6 +61,15 @@ CREATE TABLE IF NOT EXISTS email_logs (
   sent_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('sent', 'failed', 'pending'))
 );
+ 
+-- Career profile sync (multi-device login)
+CREATE TABLE IF NOT EXISTS career_profiles_sync (
+  email TEXT PRIMARY KEY,
+  profile JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_career_profiles_sync_updated_at ON career_profiles_sync(updated_at DESC);
 
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_universities_user_id ON universities(user_id);

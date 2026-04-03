@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { getOAuthCallbackParams } from '../lib/oauthCallback';
 import { getSupabaseClient } from '../lib/supabaseClient';
 import { hasStoredCareerProfile, loadCareerProfile, saveCareerProfile } from '../lib/profileStorage';
+import { fetchRemoteProfile, saveRemoteProfile } from '../lib/profileApi';
 import { runtimeConfig } from '../lib/runtimeConfig';
 import { emptyCareerProfile, type CareerProfile } from '../types/profile';
 
@@ -78,6 +79,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setEmail(nextEmail);
     setProfile(loadCareerProfile(nextEmail));
   }, []);
+
+  useEffect(() => {
+    if (!email) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const syncProfile = async () => {
+      const remoteProfile = await fetchRemoteProfile(email);
+      if (cancelled || !remoteProfile) {
+        return;
+      }
+
+      const localProfile = loadCareerProfile(email);
+      if (localProfile.onboardingCompleted) {
+        return;
+      }
+
+      const merged = {
+        ...localProfile,
+        ...remoteProfile,
+        email,
+      };
+
+      saveCareerProfile(merged);
+      setProfile(merged);
+    };
+
+    void syncProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [email]);
 
   const detectExistingUser = useCallback(
     async (userId: string, userEmail: string, fullName: string | undefined): Promise<boolean> => {
@@ -433,6 +469,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateProfile: (nextProfile: CareerProfile) => {
         saveCareerProfile(nextProfile);
         setProfile(nextProfile);
+        void saveRemoteProfile(nextProfile);
       },
     }),
     [detectExistingUser, email, isAuthLoading, profile, setAuthenticatedEmail],
