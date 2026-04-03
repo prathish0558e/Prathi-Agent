@@ -29,6 +29,8 @@ const defaultAllowedOrigins = [
   'http://127.0.0.1:5173',
   'https://prathi.tech',
   'https://www.prathi.tech',
+  'https://agent.prathi.tech',
+  'https://www.agent.prathi.tech',
 ];
 const configuredAllowedOrigins = String(process.env.ALLOWED_ORIGIN || '')
   .split(',')
@@ -88,6 +90,11 @@ app.use('/resume', resumeRouter);
 
 app.use((error, _request, response, _next) => {
   console.error(error);
+  if (error?.message === 'Not allowed by CORS') {
+    response.status(403).json({ message: 'CORS blocked: add your frontend domain to ALLOWED_ORIGIN.' });
+    return;
+  }
+
   response.status(500).json({ message: 'Internal server error' });
 });
 
