@@ -24,14 +24,7 @@ function App() {
 
     const listenerPromise = import('@capacitor/app').then(({ App: CapApp }) =>
       CapApp.addListener('appUrlOpen', async ({ url }) => {
-        const hasOAuthSignal =
-          url.includes('auth/callback') ||
-          url.includes('code=') ||
-          url.includes('error=') ||
-          url.includes('access_token=') ||
-          url.includes('refresh_token=');
-
-        if (hasOAuthSignal) {
+        if (url.includes('auth/callback')) {
           try {
             const { Browser } = await import('@capacitor/browser');
             await Browser.close();

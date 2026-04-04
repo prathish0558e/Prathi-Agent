@@ -30,17 +30,6 @@
                 <data android:scheme="com.careersentinel.ai" />
             </intent-filter>
 
-            <!-- Fallback capture for misconfigured OAuth redirects that still target localhost -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="localhost" />
-                <data android:scheme="https" android:host="localhost" />
-                <data android:scheme="http" android:host="127.0.0.1" />
-                <data android:scheme="https" android:host="127.0.0.1" />
-            </intent-filter>
-
         </activity>
 
         <provider
