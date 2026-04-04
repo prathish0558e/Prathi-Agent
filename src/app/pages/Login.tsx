@@ -15,11 +15,7 @@ export function Login() {
   const handleGoogleLogin = async () => {
     setError('');
     setIsStarting(true);
-    const { error: oauthError } = await loginWithGoogle({
-      forceGmailScopes: true,
-      useDirectOAuth: true,
-      mode: 'login',
-    });
+    const { error: oauthError } = await loginWithGoogle();
 
     if (oauthError) {
       setError(oauthError);
@@ -27,7 +23,10 @@ export function Login() {
         setShowSupabaseConfig(true);
       }
       setIsStarting(false);
+      return;
     }
+
+    setIsStarting(false);
   };
 
   return (

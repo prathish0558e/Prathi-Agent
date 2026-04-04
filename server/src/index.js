@@ -25,8 +25,6 @@ const { resumeRouter } = await import('./routes/resume.js');
 const app = express();
 const port = Number(process.env.PORT ?? 8000);
 const defaultAllowedOrigins = [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
   'https://prathi.tech',
   'https://www.prathi.tech',
   'https://agent.prathi.tech',
@@ -38,28 +36,11 @@ const configuredAllowedOrigins = String(process.env.ALLOWED_ORIGIN || '')
   .filter(Boolean);
 const allowedOrigins = new Set([...defaultAllowedOrigins, ...configuredAllowedOrigins]);
 
-const isLocalDevOrigin = (origin = '') => {
-  if (!origin) {
-    return false;
-  }
-
-  try {
-    const parsed = new URL(origin);
-    if (parsed.protocol !== 'http:') {
-      return false;
-    }
-
-    return parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1';
-  } catch {
-    return false;
-  }
-};
-
 app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.has(origin) || isLocalDevOrigin(origin)) {
+      if (!origin || allowedOrigins.has(origin)) {
         callback(null, true);
         return;
       }
@@ -99,5 +80,5 @@ app.use((error, _request, response, _next) => {
 });
 
 app.listen(port, () => {
-  console.log(`career-agent-server listening on http://localhost:${port}`);
+  console.log(`career-agent-server listening on port ${port}`);
 });

@@ -30,18 +30,17 @@ export function CreateAccount() {
             void (async () => {
               setError('');
               setIsStarting(true);
-              const { error: oauthError } = await loginWithGoogle({
-                forceGmailScopes: true,
-                useDirectOAuth: true,
-                mode: 'login',
-              });
+              const { error: oauthError } = await loginWithGoogle();
               if (oauthError) {
                 setError(oauthError);
-                if (oauthError.includes('Missing Supabase config')) {
+                if (oauthError.includes('Missing Supabase config') || oauthError.includes('provider')) {
                   setShowSupabaseConfig(true);
                 }
                 setIsStarting(false);
+                return;
               }
+
+              setIsStarting(false);
             })();
           }}
           className="w-full bg-primary text-primary-foreground font-semibold rounded-xl py-2.5 flex items-center justify-center gap-2 mb-4 disabled:opacity-60 shadow-[0_14px_28px_rgba(15,61,62,0.2)]"

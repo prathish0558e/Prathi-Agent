@@ -37,7 +37,7 @@ export const saveSupabaseRuntimeConfig = (supabaseUrl: string, supabaseAnonKey: 
 };
 
 export const runtimeConfig = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000',
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? 'https://api.prathi.tech',
   oauthEnabled: import.meta.env.VITE_GOOGLE_OAUTH_ENABLED === 'true',
 };
 

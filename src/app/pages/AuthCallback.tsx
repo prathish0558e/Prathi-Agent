@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../auth/AuthContext';
 import { getOAuthCallbackParams } from '../lib/oauthCallback';
@@ -28,7 +29,7 @@ export function AuthCallback() {
       const normalized = message.toLowerCase();
 
       if (normalized.includes('unable to exchange') || normalized.includes('exchange') || normalized.includes('invalid_code')) {
-        return 'Supabase cannot exchange Google authorization code. This usually means: (1) Redirect URI mismatch - Google Console must contain only https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback, while Supabase keeps app URLs like http://localhost:5173/#/auth/callback. (2) Google Client ID/Secret invalid - check Supabase provider settings. (3) Code expired - took too long to callback. Try login again.';
+        return 'Supabase cannot exchange Google authorization code. This usually means: (1) Redirect URI mismatch - Google Console must contain only https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback, while Supabase keeps app URLs like https://prathi.tech/#/auth/callback and com.careersentinel.ai://auth/callback. (2) Google Client ID/Secret invalid - check Supabase provider settings. (3) Code expired - took too long to callback. Try login again.';
       }
 
       if (normalized.includes('signup') || normalized.includes('sign up') || normalized.includes('user is not allowed')) {
@@ -36,7 +37,7 @@ export function AuthCallback() {
       }
 
       if (normalized.includes('redirect_uri_mismatch') || normalized.includes('redirect')) {
-        return 'OAuth redirect URL mismatch. Google Console Authorized redirect URI must be https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback. In Supabase provider, keep app return URLs under Additional Redirect URLs such as http://localhost:5173/#/auth/callback.';
+        return 'OAuth redirect URL mismatch. Google Console Authorized redirect URI must be https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback. In Supabase provider, keep app return URLs under Additional Redirect URLs such as https://prathi.tech/#/auth/callback and com.careersentinel.ai://auth/callback.';
       }
 
       if (normalized.includes('provider is not enabled') || normalized.includes('unsupported provider')) {
@@ -186,9 +187,18 @@ export function AuthCallback() {
       return;
     }
 
-    const startDirectMailReconnect = () => {
-      const returnTo = window.location.origin;
-      window.location.href = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=mail`;
+    const startDirectMailReconnect = async () => {
+      const isNative = Capacitor.isNativePlatform();
+      const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
+      const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=mail`;
+
+      if (isNative) {
+        const { Browser } = await import('@capacitor/browser');
+        await Browser.open({ url });
+        return;
+      }
+
+      window.location.href = url;
     };
 
     const hasValidMailToken = () => {
@@ -207,7 +217,7 @@ export function AuthCallback() {
 
     const triggerMailReconnect = () => {
       sessionStorage.setItem(MAIL_AUTO_CONNECT_KEY, 'true');
-      startDirectMailReconnect();
+      void startDirectMailReconnect();
       return true;
     };
 
@@ -267,10 +277,7 @@ export function AuthCallback() {
         localStorage.setItem(GOOGLE_PROVIDER_TOKEN_KEY, session.provider_token);
       }
 
-      const shouldRedirectToMail = await maybeTriggerMailConsent(session.provider_token);
-      if (shouldRedirectToMail) {
-        return;
-      }
+      // Keep login independent from optional Gmail consent reconnect.
 
       const onboardingCompleted = await resolveOnboardingCompleted(userEmail, {
         userId: session.user?.id,
@@ -373,13 +380,12 @@ export function AuthCallback() {
                 <li>
                   Under "Additional Redirect URLs", ensure these are added:
                   <ul className="list-disc list-inside ml-4 mt-1 text-muted-foreground">
-                    <li>http://localhost:5173/#/auth/callback</li>
                     <li>https://prathi.tech/#/auth/callback</li>
+                    <li>com.careersentinel.ai://auth/callback</li>
                   </ul>
                 </li>
                 <li>Google Cloud OAuth client type must be Web application</li>
                 <li>In Google Cloud → OAuth Client → Authorized redirect URIs add: https://&lt;project-ref&gt;.supabase.co/auth/v1/callback</li>
-                <li>If using Gmail direct consent, also add: http://localhost:8000/auth/google/callback</li>
                 <li>Wait 1-2 minutes for changes to propagate</li>
                 <li>Try login again</li>
               </ol>

@@ -117,8 +117,8 @@ export function SupabaseConfigCard({ onSaved }: SupabaseConfigCardProps) {
                 <p className="font-semibold text-foreground">3. Add Redirect URLs</p>
                 <p className="text-xs mt-1">In "Additional Redirect URLs", add:</p>
                 <div className="mt-1 space-y-1 text-xs">
-                  <code className="block bg-secondary px-1.5 py-1 rounded text-emerald-700 break-all">http://localhost:5173/#/auth/callback</code>
                   <code className="block bg-secondary px-1.5 py-1 rounded text-emerald-700 break-all">https://prathi.tech/#/auth/callback</code>
+                  <code className="block bg-secondary px-1.5 py-1 rounded text-emerald-700 break-all">com.careersentinel.ai://auth/callback</code>
                 </div>
                 <p className="text-xs mt-2 text-muted-foreground">
                   Google Cloud "Authorized redirect URIs" should include only the Supabase callback: <code className="bg-secondary px-1 py-0.5 rounded text-foreground break-all">https://{projectRef}.supabase.co/auth/v1/callback</code>.

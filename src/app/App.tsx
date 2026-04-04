@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { RouterProvider } from 'react-router';
 import { NetworkHealthBanner } from './components/NetworkHealthBanner';
 import { getOAuthCallbackParams } from './lib/oauthCallback';
@@ -17,14 +18,19 @@ function App() {
       return;
     }
 
-    const isNative =
-      typeof window !== 'undefined' &&
-      (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() === true;
+    const isNative = Capacitor.isNativePlatform();
     if (!isNative) return;
 
     const listenerPromise = import('@capacitor/app').then(({ App: CapApp }) =>
       CapApp.addListener('appUrlOpen', async ({ url }) => {
-        if (url.includes('auth/callback')) {
+        const hasOAuthSignal =
+          url.includes('auth/callback') ||
+          url.includes('code=') ||
+          url.includes('error=') ||
+          url.includes('access_token=') ||
+          url.includes('refresh_token=');
+
+        if (hasOAuthSignal) {
           try {
             const { Browser } = await import('@capacitor/browser');
             await Browser.close();

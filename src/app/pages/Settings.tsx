@@ -533,7 +533,7 @@ export function Settings() {
                     <li>Enable Gmail API for your project</li>
                     <li>In Supabase Dashboard → Authentication → Providers → Google</li>
                     <li>Add scopes: <code className="bg-card px-1 rounded">gmail.readonly gmail.send</code></li>
-                    <li>In Google Cloud → OAuth Client (Web), add redirect: <code className="bg-card px-1 rounded">http://localhost:8000/auth/google/callback</code></li>
+                    <li>In Google Cloud → OAuth Client (Web), add redirect: <code className="bg-card px-1 rounded">https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback</code></li>
                     <li>Click "Reconnect Gmail" button above</li>
                     <li>Accept all permissions on Google consent screen</li>
                   </ol>

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { getOAuthCallbackParams } from '../lib/oauthCallback';
 import { getSupabaseClient } from '../lib/supabaseClient';
 import { hasStoredCareerProfile, loadCareerProfile, saveCareerProfile } from '../lib/profileStorage';
@@ -39,7 +40,7 @@ const mapOAuthErrorMessage = (rawMessage: string) => {
   const normalized = rawMessage.toLowerCase();
 
   if (normalized.includes('unsupported provider') || normalized.includes('provider is not enabled')) {
-    return 'Google provider is disabled in Supabase. Enable it in Supabase Dashboard -> Authentication -> Providers -> Google, then add Redirect URLs: http://localhost:5173/#/auth/callback and https://prathi.tech/#/auth/callback';
+    return 'Google provider is disabled in Supabase. Enable it in Supabase Dashboard -> Authentication -> Providers -> Google, then add Redirect URLs: https://prathi.tech/#/auth/callback and com.careersentinel.ai://auth/callback';
   }
 
   if (normalized.includes('invalid login credentials')) {
@@ -51,7 +52,7 @@ const mapOAuthErrorMessage = (rawMessage: string) => {
   }
 
   if (normalized.includes('redirect_uri_mismatch') || normalized.includes('mismatch')) {
-    return 'Redirect URI mismatch: Configure Google Console Authorized redirect URI as https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback, and keep http://localhost:5173/#/auth/callback (or production hash callback) in Supabase Additional Redirect URLs.';
+    return 'Redirect URI mismatch: Configure Google Console Authorized redirect URI as https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback, and keep https://prathi.tech/#/auth/callback plus com.careersentinel.ai://auth/callback in Supabase Additional Redirect URLs.';
   }
 
   if (normalized.includes('unable to exchange') || normalized.includes('invalid_code') || normalized.includes('exchange')) {
@@ -262,7 +263,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             try {
               const configRes = await fetch(`${runtimeConfig.apiBaseUrl}/auth/google/config`);
               if (!configRes.ok) {
-                return { error: 'Backend Google OAuth is unreachable. Start the server on port 8000.' };
+                return { error: `Backend Google OAuth is unreachable at ${runtimeConfig.apiBaseUrl}.` };
               }
 
               const config = await configRes.json().catch(() => ({}));
@@ -271,15 +272,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return { error: warnings || 'Backend Google OAuth is not configured.' };
               }
             } catch {
-              return { error: 'Backend Google OAuth is unreachable. Start the server on port 8000.' };
+              return { error: `Backend Google OAuth is unreachable at ${runtimeConfig.apiBaseUrl}.` };
             }
 
-            const returnTo = window.location.origin;
+            const isNative = Capacitor.isNativePlatform();
+            const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
             const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=${mode}`;
-            const isNative =
-              typeof window !== 'undefined' &&
-              (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() ===
-                true;
 
             if (isNative) {
               const { Browser } = await import('@capacitor/browser');
@@ -310,7 +308,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ].join(' ');
         const basicScopes = ['openid', 'email', 'profile'].join(' ');
 
-        const isNative = typeof window !== 'undefined' && (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() === true;
+        const isNative = Capacitor.isNativePlatform();
         const redirectTo = isNative
           ? 'com.careersentinel.ai://auth/callback'
           : `${window.location.origin}/#/auth/callback`;
@@ -330,8 +328,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           });
 
           if (isNative && !result.error && result.data?.url) {
+            let oauthUrl = result.data.url;
+            try {
+              const authUrl = new URL(oauthUrl);
+              authUrl.searchParams.set('redirect_to', 'com.careersentinel.ai://auth/callback');
+              oauthUrl = authUrl.toString();
+            } catch {
+              // Keep original URL if parsing fails.
+            }
+
             const { Browser } = await import('@capacitor/browser');
-            await Browser.open({ url: result.data.url });
+            await Browser.open({ url: oauthUrl });
           }
 
           return result;

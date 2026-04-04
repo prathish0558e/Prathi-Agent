@@ -10,11 +10,13 @@ const MAIL_SCOPES = [
   'https://www.googleapis.com/auth/gmail.send',
 ];
 
+const NATIVE_CALLBACK_SCHEME = 'com.careersentinel.ai://';
+
 const getOAuthConfig = () => ({
   clientId: String(process.env.GOOGLE_CLIENT_ID || '').trim(),
   clientSecret: String(process.env.GOOGLE_CLIENT_SECRET || '').trim(),
-  serverOrigin: String(process.env.SERVER_ORIGIN || 'http://localhost:8000').trim().replace(/\/$/, ''),
-  defaultWebReturnTo: String(process.env.WEB_ORIGIN || 'http://localhost:5173').trim().replace(/\/$/, ''),
+  serverOrigin: String(process.env.SERVER_ORIGIN || 'https://api.prathi.tech').trim().replace(/\/$/, ''),
+  defaultWebReturnTo: String(process.env.WEB_ORIGIN || 'https://prathi.tech').trim().replace(/\/$/, ''),
 });
 
 const encodeState = (payload) => Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
@@ -53,10 +55,14 @@ const fetchGoogleProfile = async (accessToken) => {
   }
 };
 
-const normalizeReturnTo = (value = '', defaultReturnTo = 'http://localhost:5173') => {
+const normalizeReturnTo = (value = '', defaultReturnTo = 'https://prathi.tech') => {
   const trimmed = String(value || '').trim();
   if (!trimmed) {
     return defaultReturnTo;
+  }
+
+  if (trimmed.toLowerCase().startsWith(NATIVE_CALLBACK_SCHEME)) {
+    return trimmed;
   }
 
   try {
@@ -69,6 +75,15 @@ const normalizeReturnTo = (value = '', defaultReturnTo = 'http://localhost:5173'
   } catch {
     return defaultReturnTo;
   }
+};
+
+const getRedirectBase = (returnTo = '') => {
+  if (String(returnTo).toLowerCase().startsWith(NATIVE_CALLBACK_SCHEME)) {
+    const cleaned = String(returnTo).replace(/[?#].*$/, '').replace(/\/$/, '');
+    return cleaned.includes('/auth/callback') ? cleaned : `${cleaned}/auth/callback`;
+  }
+
+  return `${returnTo}/#/auth/callback`;
 };
 
 authRouter.get('/google/config', (_request, response) => {
@@ -130,7 +145,7 @@ authRouter.get('/google/callback', async (request, response) => {
   const statePayload = decodeState(String(state || ''));
   const returnTo = normalizeReturnTo(statePayload.returnTo || '', oauthConfig.defaultWebReturnTo);
   const mode = normalizeMode(statePayload.mode || '');
-  const redirectBase = `${returnTo}/#/auth/callback`;
+  const redirectBase = getRedirectBase(returnTo);
 
   if (error) {
     response.redirect(`${redirectBase}?mail_error=${encodeURIComponent(String(error))}`);
