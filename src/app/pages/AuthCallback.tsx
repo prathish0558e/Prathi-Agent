@@ -280,10 +280,8 @@ export function AuthCallback() {
         localStorage.setItem(GOOGLE_PROVIDER_TOKEN_KEY, session.provider_token);
       }
 
-      const shouldRedirectToMail = await maybeTriggerMailConsent(session.provider_token);
-      if (shouldRedirectToMail) {
-        return;
-      }
+      // Keep login independent from optional Gmail direct-consent flow.
+      // Users can connect Gmail later from Settings/Email Logs.
 
       const onboardingCompleted = await resolveOnboardingCompleted(userEmail, {
         userId: session.user?.id,

@@ -262,7 +262,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             try {
               const configRes = await fetch(`${runtimeConfig.apiBaseUrl}/auth/google/config`);
               if (!configRes.ok) {
-                return { error: 'Backend Google OAuth is unreachable. Start the server on port 8000.' };
+                return { error: `Backend Google OAuth is unreachable at ${runtimeConfig.apiBaseUrl}.` };
               }
 
               const config = await configRes.json().catch(() => ({}));
@@ -271,7 +271,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return { error: warnings || 'Backend Google OAuth is not configured.' };
               }
             } catch {
-              return { error: 'Backend Google OAuth is unreachable. Start the server on port 8000.' };
+              return { error: `Backend Google OAuth is unreachable at ${runtimeConfig.apiBaseUrl}.` };
             }
 
             const isNative =
