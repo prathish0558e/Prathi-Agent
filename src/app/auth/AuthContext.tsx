@@ -276,7 +276,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             const isNative = Capacitor.isNativePlatform();
-            const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
+            const webReturnTo = window.location.origin.startsWith('https://')
+              ? window.location.origin
+              : 'https://prathi.tech';
+            const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : webReturnTo;
             const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=${mode}`;
 
             if (isNative) {
@@ -309,9 +312,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const basicScopes = ['openid', 'email', 'profile'].join(' ');
 
         const isNative = Capacitor.isNativePlatform();
+        const webReturnTo = window.location.origin.startsWith('https://')
+          ? window.location.origin
+          : 'https://prathi.tech';
         const redirectTo = isNative
           ? 'com.careersentinel.ai://auth/callback'
-          : `${window.location.origin}/#/auth/callback`;
+          : `${webReturnTo}/#/auth/callback`;
 
         const attemptLogin = async (scopes: string) => {
           const result = await supabase.auth.signInWithOAuth({

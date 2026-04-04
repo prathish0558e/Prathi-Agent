@@ -189,7 +189,10 @@ export function AuthCallback() {
 
     const startDirectMailReconnect = async () => {
       const isNative = Capacitor.isNativePlatform();
-      const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
+      const webReturnTo = window.location.origin.startsWith('https://')
+        ? window.location.origin
+        : 'https://prathi.tech';
+      const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : webReturnTo;
       const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=mail`;
 
       if (isNative) {
