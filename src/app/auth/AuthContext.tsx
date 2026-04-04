@@ -274,12 +274,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               return { error: 'Backend Google OAuth is unreachable. Start the server on port 8000.' };
             }
 
-            const returnTo = window.location.origin;
-            const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=${mode}`;
             const isNative =
               typeof window !== 'undefined' &&
               (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() ===
                 true;
+            const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
+            const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=${mode}`;
 
             if (isNative) {
               const { Browser } = await import('@capacitor/browser');
