@@ -186,22 +186,9 @@ export function AuthCallback() {
       return;
     }
 
-    const startDirectMailReconnect = async () => {
-      const isNative =
-        typeof window !== 'undefined' &&
-        (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() ===
-          true;
-
-      const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
-      const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=mail`;
-
-      if (isNative) {
-        const { Browser } = await import('@capacitor/browser');
-        await Browser.open({ url });
-        return;
-      }
-
-      window.location.href = url;
+    const startDirectMailReconnect = () => {
+      const returnTo = window.location.origin;
+      window.location.href = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=mail`;
     };
 
     const hasValidMailToken = () => {
@@ -220,7 +207,7 @@ export function AuthCallback() {
 
     const triggerMailReconnect = () => {
       sessionStorage.setItem(MAIL_AUTO_CONNECT_KEY, 'true');
-      void startDirectMailReconnect();
+      startDirectMailReconnect();
       return true;
     };
 

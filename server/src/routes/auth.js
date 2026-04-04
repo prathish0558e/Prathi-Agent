@@ -10,8 +10,6 @@ const MAIL_SCOPES = [
   'https://www.googleapis.com/auth/gmail.send',
 ];
 
-const NATIVE_CALLBACK_SCHEME = 'com.careersentinel.ai://';
-
 const getOAuthConfig = () => ({
   clientId: String(process.env.GOOGLE_CLIENT_ID || '').trim(),
   clientSecret: String(process.env.GOOGLE_CLIENT_SECRET || '').trim(),
@@ -61,10 +59,6 @@ const normalizeReturnTo = (value = '', defaultReturnTo = 'http://localhost:5173'
     return defaultReturnTo;
   }
 
-  if (trimmed.toLowerCase().startsWith(NATIVE_CALLBACK_SCHEME)) {
-    return trimmed;
-  }
-
   try {
     const parsed = new URL(trimmed);
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
@@ -75,15 +69,6 @@ const normalizeReturnTo = (value = '', defaultReturnTo = 'http://localhost:5173'
   } catch {
     return defaultReturnTo;
   }
-};
-
-const getRedirectBase = (returnTo = '') => {
-  if (String(returnTo).toLowerCase().startsWith(NATIVE_CALLBACK_SCHEME)) {
-    const cleaned = String(returnTo).replace(/[?#].*$/, '').replace(/\/$/, '');
-    return cleaned.includes('/auth/callback') ? cleaned : `${cleaned}/auth/callback`;
-  }
-
-  return `${returnTo}/#/auth/callback`;
 };
 
 authRouter.get('/google/config', (_request, response) => {
@@ -145,7 +130,7 @@ authRouter.get('/google/callback', async (request, response) => {
   const statePayload = decodeState(String(state || ''));
   const returnTo = normalizeReturnTo(statePayload.returnTo || '', oauthConfig.defaultWebReturnTo);
   const mode = normalizeMode(statePayload.mode || '');
-  const redirectBase = getRedirectBase(returnTo);
+  const redirectBase = `${returnTo}/#/auth/callback`;
 
   if (error) {
     response.redirect(`${redirectBase}?mail_error=${encodeURIComponent(String(error))}`);
