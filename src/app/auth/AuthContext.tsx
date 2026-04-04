@@ -330,26 +330,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           });
 
           if (isNative && !result.error && result.data?.url) {
-            try {
-              const authUrl = new URL(result.data.url);
-              const redirectToParam = authUrl.searchParams.get('redirect_to') || '';
-              const isLocalRedirect = /(^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?)/i.test(redirectToParam);
-              const isLocalAuthUrl = /^(localhost|127\.0\.0\.1)$/i.test(authUrl.hostname);
-
-              if (isLocalRedirect || isLocalAuthUrl) {
-                return {
-                  ...result,
-                  error: {
-                    name: 'invalid_redirect',
-                    message:
-                      'Supabase OAuth redirect is pointing to localhost. In Supabase Auth URL Configuration, set Site URL to https://prathi.tech and add Additional Redirect URL: com.careersentinel.ai://auth/callback',
-                  },
-                };
-              }
-            } catch {
-              // Keep default behavior if URL parsing fails.
-            }
-
             const { Browser } = await import('@capacitor/browser');
             await Browser.open({ url: result.data.url });
           }
