@@ -5,7 +5,6 @@ import { getOAuthCallbackParams } from '../lib/oauthCallback';
 import { getSupabaseClient } from '../lib/supabaseClient';
 import { fetchRemoteProfile } from '../lib/profileApi';
 import { loadCareerProfile } from '../lib/profileStorage';
-import { isNativeApp } from '../lib/platform';
 import { runtimeConfig } from '../lib/runtimeConfig';
 
 const AUTH_EMAIL_KEY = 'career_agent_auth_email';
@@ -188,7 +187,10 @@ export function AuthCallback() {
     }
 
     const startDirectMailReconnect = async () => {
-      const isNative = isNativeApp();
+      const isNative =
+        typeof window !== 'undefined' &&
+        (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() ===
+          true;
 
       const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
       const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=mail`;

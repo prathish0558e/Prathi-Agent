@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { RouterProvider } from 'react-router';
 import { NetworkHealthBanner } from './components/NetworkHealthBanner';
 import { getOAuthCallbackParams } from './lib/oauthCallback';
-import { isNativeApp } from './lib/platform';
 import { router } from './routes';
 import { applyTheme, getStoredTheme } from './lib/theme';
 
@@ -18,7 +17,9 @@ function App() {
       return;
     }
 
-    const isNative = isNativeApp();
+    const isNative =
+      typeof window !== 'undefined' &&
+      (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() === true;
     if (!isNative) return;
 
     const listenerPromise = import('@capacitor/app').then(({ App: CapApp }) =>
