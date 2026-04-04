@@ -195,7 +195,7 @@
 npm run dev:all
 ```
 
-### 3. Access at http://localhost:5173
+### 3. Access at https://prathi.tech
 
 ### 4. Start Using
 - Click "University" in bottom nav
@@ -281,7 +281,7 @@ Each guide is detailed, easy to follow, and includes troubleshooting tips.
 
 - [ ] Run supabase_migration.sql in Supabase SQL Editor
 - [ ] Run `npm run dev:all`
-- [ ] Open http://localhost:5173
+- [ ] Open https://prathi.tech
 - [ ] Login with your email
 - [ ] Click "University" in bottom nav
 - [ ] Add your first university
@@ -399,3 +399,4 @@ All core functionality is production-ready. Just need to:
 **Status**: READY FOR USE ✅
 
 Thank you for using this implementation! Good luck with your university applications! 🎓
+

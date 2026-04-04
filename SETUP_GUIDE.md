@@ -24,7 +24,7 @@ This app now uses **Supabase** for secure authentication instead of direct backe
 6. Enable Google provider
 7. Add Google OAuth credentials (see step 2 below)
 8. Add redirect URLs:
-   - `http://localhost:5173/#/auth/callback` (local dev)
+   - `https://prathi.tech/#/auth/callback` (local dev)
    - `https://prathi.tech/#/auth/callback` (production)
 
 ### 2. Google OAuth Credentials
@@ -44,10 +44,10 @@ This app now uses **Supabase** for secure authentication instead of direct backe
    - Type: Web application
    - Name: Career Agent
    - Authorized JavaScript origins:
-     - `http://localhost:5173`
+     - `https://prathi.tech`
      - `https://prathi.tech`
    - Authorized redirect URIs:
-     - `http://localhost:5173/#/auth/callback`
+     - `https://prathi.tech/#/auth/callback`
      - `https://prathi.tech/#/auth/callback`
 6. Copy Client ID and Secret
 7. Paste into Supabase Google Provider settings
@@ -56,15 +56,15 @@ This app now uses **Supabase** for secure authentication instead of direct backe
 ```
 ✓ GOOGLE_CLIENT_ID=placeholder-dev-client-id
 ✓ GOOGLE_CLIENT_SECRET=placeholder-dev-client-secret
-✓ SERVER_ORIGIN=http://localhost:8000
-✓ WEB_ORIGIN=http://localhost:5173
+✓ SERVER_ORIGIN=https://api.prathi.tech
+✓ WEB_ORIGIN=https://prathi.tech
 ```
 
 **Note**: For production Gmail consent, get real OAuth credentials from [Google Cloud Console](https://console.cloud.google.com):
 1. Create project
 2. Enable Gmail API
 3. Create OAuth 2.0 Client ID (Web application)
-4. Add redirect URIs: `http://localhost:8000/auth/google/callback`
+4. Add redirect URIs: `https://api.prathi.tech/auth/google/callback`
 5. Update `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `server/.env`
 
 ### 4. Job Sources - 10+ APIs (Expanded!)
@@ -108,14 +108,14 @@ Now fetching from **10+ job boards** for massive job supply:
 ### Frontend (React + Vite)
 ```bash
 npm run dev:client
-# Runs on http://localhost:5173
+# Runs on https://prathi.tech
 ```
 
 ### Backend (Express + Node)
 ```bash
 cd server
 npm run dev
-# Runs on http://localhost:8000
+# Runs on https://api.prathi.tech
 ```
 
 ### Both Together
@@ -174,7 +174,7 @@ POST /jobs/watch/openings
 ### Required
 ```env
 # Frontend URLs
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=https://api.prathi.tech
 VITE_GOOGLE_OAUTH_ENABLED=true
 
 # Google OAuth
@@ -182,8 +182,8 @@ GOOGLE_CLIENT_ID=your-client-id
 GOOGLE_CLIENT_SECRET=your-client-secret
 
 # Server URLs  
-SERVER_ORIGIN=http://localhost:8000
-WEB_ORIGIN=http://localhost:5173
+SERVER_ORIGIN=https://api.prathi.tech
+WEB_ORIGIN=https://prathi.tech
 
 # API Keys (Optional, but gets more jobs with them)
 ADZUNA_APP_ID=your-app-id
@@ -250,7 +250,7 @@ AUTO_MAIL_INTERVAL_MINUTES=15
 - Enable `?deep=true` for deeper search
 
 ### "Gmail token error"
-- Run: `GET /auth/google/start?returnTo=http://localhost:5173`
+- Run: `GET /auth/google/start?returnTo=https://prathi.tech`
 - Accept permissions on Google consent screen
 - Token auto-refreshes after expiry
 
@@ -273,7 +273,7 @@ AUTO_MAIL_INTERVAL_MINUTES=15
 
 2. **Test Endpoints**:
    ```bash
-   curl "http://localhost:8000/jobs/feed?query=developer&limit=10"
+   curl "https://api.prathi.tech/jobs/feed?query=developer&limit=10"
    ```
 
 3. **Set Up Database** (Optional):
@@ -290,3 +290,4 @@ AUTO_MAIL_INTERVAL_MINUTES=15
 ---
 
 **Built with ❤️ for job seekers in 2026**
+

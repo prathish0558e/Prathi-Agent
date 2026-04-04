@@ -77,7 +77,7 @@ Or run frontend and backend separately:
 
 STEP 3: Login and Try It Out (2 minutes)
 ─────────────────────────────────────────
-1. Open http://localhost:5173 in browser
+1. Open https://prathi.tech in browser
 2. Login with your email
 3. Click "University" in the bottom navigation
 4. Click "Add University" and add your first university
@@ -204,7 +204,7 @@ Phase 6 - Advanced Features:
 ❓ COMMON QUESTIONS:
 
 Q: How do I access the app?
-A: Open http://localhost:5173 after running npm run dev:all
+A: Open https://prathi.tech after running npm run dev:all
 
 Q: Where do I add my Supabase credentials?
 A: They should be in your .env file already, but if not, add them and restart.
@@ -261,7 +261,7 @@ For detailed help:
 
 Everything is ready to use. Start by:
 1. Running npm run dev:all
-2. Opening http://localhost:5173
+2. Opening https://prathi.tech
 3. Adding your first university
 4. Creating your first application
 5. Uploading some documents
@@ -269,3 +269,4 @@ Everything is ready to use. Start by:
 Happy automating! 🚀
 
 ═══════════════════════════════════════════════════════════════════════════════
+

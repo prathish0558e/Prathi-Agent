@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "dev:client": "vite --host localhost --port 5173",
+    "dev:client": "vite --host 0.0.0.0 --port 5173",
     "dev:server": "npm --prefix server run dev",
     "dev:all": "concurrently -k -n client,server \"npm run dev:client\" \"npm run dev:server\"",
     "cap:add:android": "npx cap add android",
@@ -103,3 +103,4 @@
     }
   }
 }
+

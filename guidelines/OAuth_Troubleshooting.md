@@ -15,7 +15,7 @@ When you see `Unable to exchange external code: 4/0AfrIepDFTI0cW7...` and get re
 **Fix:**
 1. Go to Supabase Dashboard → Authentication → Providers → Google
 2. Under "Redirect URLs", add BOTH:
-   - `http://localhost:5173/#/auth/callback` (for local development)
+   - `https://prathi.tech/#/auth/callback` (for local development)
    - `https://prathi.tech/#/auth/callback` (for production)
 3. It must match **exactly** - case-sensitive, include the protocol (http:// or https://)
 
@@ -77,8 +77,8 @@ When you see `Unable to exchange external code: 4/0AfrIepDFTI0cW7...` and get re
 - [ ] Supabase Google Provider is **Enabled**
 - [ ] Google Client ID is filled in Supabase
 - [ ] Google Client Secret is filled in Supabase
-- [ ] Redirect URLs in Supabase include `http://localhost:5173/#/auth/callback`
-- [ ] Redirect URLs in Google Console include `http://localhost:5173/#/auth/callback`
+- [ ] Redirect URLs in Supabase include `https://prathi.tech/#/auth/callback`
+- [ ] Redirect URLs in Google Console include `https://prathi.tech/#/auth/callback`
 - [ ] URLs match **exactly** (case-sensitive)
 - [ ] Gmail API is enabled (if you need email features)
 - [ ] At least 1-2 minutes have passed since making changes
@@ -94,10 +94,10 @@ When you see `Unable to exchange external code: 4/0AfrIepDFTI0cW7...` and get re
 3. Click "Create Credentials" → "OAuth 2.0 Client IDs"
 4. Choose "Web application"
 5. Under "Authorized JavaScript origins", add:
-   - `http://localhost:5173`
+   - `https://prathi.tech`
    - `https://prathi.tech`
 6. Under "Authorized redirect URIs", add:
-   - `http://localhost:5173/#/auth/callback`
+   - `https://prathi.tech/#/auth/callback`
    - `https://prathi.tech/#/auth/callback`
 7. Click Create
 8. Copy the Client ID and Secret
@@ -108,7 +108,7 @@ When you see `Unable to exchange external code: 4/0AfrIepDFTI0cW7...` and get re
 2. Toggle "Enabled" ON
 3. Paste Client ID and Secret from step 8 above
 4. Under "Redirect URLs", paste:
-   - `http://localhost:5173/#/auth/callback`
+   - `https://prathi.tech/#/auth/callback`
    - `https://prathi.tech/#/auth/callback`
 5. Click Save
 6. Wait 1-2 minutes
@@ -178,3 +178,4 @@ If you've done all the above and still stuck:
 - Screenshot the Supabase provider settings
 - Try with a different Google Account
 - Check if your ISP/VPN is blocking Google's OAuth servers
+

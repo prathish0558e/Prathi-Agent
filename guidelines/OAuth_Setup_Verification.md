@@ -4,7 +4,7 @@
 ```
 Supabase Project: fsciwivkplhcjsrqjnmk
 Supabase URL: https://fsciwivkplhcjsrqjnmk.supabase.co
-Local Dev URL: http://localhost:5173
+Local Dev URL: https://prathi.tech
 Production URL: https://prathi.tech
 ```
 
@@ -31,7 +31,7 @@ Or navigate manually:
 - [ ] Default URL: `https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback`
   
 **Under "Additional Redirect URLs", add BOTH:**
-- [ ] `http://localhost:5173/#/auth/callback`
+- [ ] `https://prathi.tech/#/auth/callback`
 - [ ] `https://prathi.tech/#/auth/callback`
 
 ---
@@ -48,12 +48,12 @@ If you don't have them, get from Google Cloud Console:
 6. Name: "Career Agent"
 
 **Under "Authorized JavaScript origins", add:**
-- [ ] `http://localhost:5173`
+- [ ] `https://prathi.tech`
 - [ ] `https://prathi.tech`
 - [ ] `https://fsciwivkplhcjsrqjnmk.supabase.co`
 
 **Under "Authorized redirect URIs", add:**
-- [ ] `http://localhost:5173/#/auth/callback`
+- [ ] `https://prathi.tech/#/auth/callback`
 - [ ] `https://prathi.tech/#/auth/callback`
 - [ ] `https://fsciwivkplhcjsrqjnmk.supabase.co/auth/v1/callback`
 
@@ -112,7 +112,7 @@ For company finder to work:
 
 3. **Close browser completely** and reopen
 
-4. **Go to:** http://localhost:5173
+4. **Go to:** https://prathi.tech
 5. **Click "Continue with Google"**
 6. **You should be redirected to Google login**
 7. **After login, you should be redirected to your app**
@@ -138,10 +138,10 @@ For company finder to work:
 - Redirect URLs are **case-sensitive**
 - Make sure the `/#/` is included
 - No trailing slashes
-- Use `http://` for localhost, `https://` for production
+- Use `http://` for prathi.tech, `https://` for production
 
 ### Common Mistakes
-- [ ] Using `http://localhost:5173/auth/callback` instead of `http://localhost:5173/#/auth/callback`
+- [ ] Using `https://prathi.tech/auth/callback` instead of `https://prathi.tech/#/auth/callback`
 - [ ] Missing the `#` character
 - [ ] Using different URLs in Supabase vs Google Console
 - [ ] Typos in Client ID or Secret
@@ -154,7 +154,7 @@ For company finder to work:
 
 Save this info when contacting support:
 - Supabase Project ID: `fsciwivkplhcjsrqjnmk`
-- Local Dev URL: `http://localhost:5173`
+- Local Dev URL: `https://prathi.tech`
 - Production URL: `https://prathi.tech`
 - Error message: (paste the full error you see)
 - Browser: (Chrome, Firefox, Safari, etc.)
@@ -168,3 +168,4 @@ Save this info when contacting support:
 - Google Cloud Console: https://console.cloud.google.com
 - Supabase Auth Docs: https://supabase.com/docs/guides/auth
 - Google OAuth Docs: https://developers.google.com/identity/protocols/oauth2
+

@@ -11,7 +11,7 @@
     Create a `.env` file in the project root:
 
     ```bash
-    VITE_API_BASE_URL=http://localhost:8000
+    VITE_API_BASE_URL=https://api.prathi.tech
     VITE_GOOGLE_OAUTH_ENABLED=true
     VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
     VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
@@ -43,13 +43,13 @@
 
   Local URLs:
 
-  - Frontend: `http://localhost:5173/`
-  - Backend health: `http://127.0.0.1:8000/health`
+  - Frontend: `https://prathi.tech/`
+  - Backend health: `https://api.prathi.tech/health`
 
   OAuth callback URLs to add in Supabase Authentication -> URL Configuration:
 
-  - `http://localhost:5173/#/auth/callback`
-  - `http://127.0.0.1:5173/#/auth/callback`
+  - `https://prathi.tech/#/auth/callback`
+  - `https://prathi.tech/#/auth/callback`
 
   ## Android APK build (Capacitor)
 
@@ -86,7 +86,7 @@
 
     1. In Supabase Dashboard, enable Google provider in Authentication -> Providers.
     2. In Supabase Authentication -> URL Configuration, add your app URLs such as:
-      - `http://localhost:5173/#/auth/callback`
+      - `https://prathi.tech/#/auth/callback`
       - `https://prathi.tech/#/auth/callback`
       - `https://www.prathi.tech/#/auth/callback`
     3. In Google Cloud Console, the Authorized redirect URI must be your Supabase callback URL, usually:

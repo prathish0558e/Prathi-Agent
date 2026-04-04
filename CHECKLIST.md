@@ -99,7 +99,7 @@ Application Setup:
   [ ] Run: npm install
   [ ] Check .env file has VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
   [ ] Run: npm run dev:all
-  [ ] Open http://localhost:5173
+  [ ] Open https://prathi.tech
 
 Testing:
   [ ] Login with your email
@@ -280,3 +280,4 @@ Questions? Check the documentation:
 Happy tracking! 🚀
 
 ═══════════════════════════════════════════════════════════════════════════════
+

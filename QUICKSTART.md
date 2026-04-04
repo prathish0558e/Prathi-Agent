@@ -18,7 +18,7 @@ npm run dev:all
 This starts both frontend (port 5173) and backend (port 8000).
 
 ### Step 3: Login (1 minute)
-- Open http://localhost:5173
+- Open https://prathi.tech
 - Login with your email
 - You're ready to go!
 
@@ -183,3 +183,4 @@ For issues:
 8. ⬜ Track your progress!
 
 **Let's automate your university applications! 🎓**
+
