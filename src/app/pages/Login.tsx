@@ -19,7 +19,7 @@ export function Login() {
 
     if (oauthError) {
       setError(oauthError);
-      if (oauthError.includes('Missing Supabase config') || oauthError.includes('provider')) {
+      if (oauthError.includes('Missing Supabase config') || oauthError.includes('provider') || oauthError.toLowerCase().includes('localhost')) {
         setShowSupabaseConfig(true);
       }
       setIsStarting(false);

@@ -33,7 +33,7 @@ export function CreateAccount() {
               const { error: oauthError } = await loginWithGoogle();
               if (oauthError) {
                 setError(oauthError);
-                if (oauthError.includes('Missing Supabase config')) {
+                if (oauthError.includes('Missing Supabase config') || oauthError.toLowerCase().includes('localhost')) {
                   setShowSupabaseConfig(true);
                 }
                 setIsStarting(false);

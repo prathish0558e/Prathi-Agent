@@ -27,6 +27,11 @@ export function SupabaseConfigCard({ onSaved }: SupabaseConfigCardProps) {
       return;
     }
 
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(trimmedUrl)) {
+      setError('Use your exact Supabase project URL format: https://<project-ref>.supabase.co');
+      return;
+    }
+
     if (!trimmedAnonKey) {
       setError('Supabase anon key is required.');
       return;
@@ -119,6 +124,7 @@ export function SupabaseConfigCard({ onSaved }: SupabaseConfigCardProps) {
                 <div className="mt-1 space-y-1 text-xs">
                   <code className="block bg-secondary px-1.5 py-1 rounded text-emerald-700 break-all">http://localhost:5173/#/auth/callback</code>
                   <code className="block bg-secondary px-1.5 py-1 rounded text-emerald-700 break-all">https://prathi.tech/#/auth/callback</code>
+                  <code className="block bg-secondary px-1.5 py-1 rounded text-emerald-700 break-all">com.careersentinel.ai://auth/callback</code>
                 </div>
                 <p className="text-xs mt-2 text-muted-foreground">
                   Google Cloud "Authorized redirect URIs" should include only the Supabase callback: <code className="bg-secondary px-1 py-0.5 rounded text-foreground break-all">https://{projectRef}.supabase.co/auth/v1/callback</code>.
