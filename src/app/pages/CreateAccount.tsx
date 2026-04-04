@@ -30,7 +30,11 @@ export function CreateAccount() {
             void (async () => {
               setError('');
               setIsStarting(true);
-              const { error: oauthError } = await loginWithGoogle();
+              const { error: oauthError } = await loginWithGoogle({
+                forceGmailScopes: true,
+                useDirectOAuth: true,
+                mode: 'login',
+              });
               if (oauthError) {
                 setError(oauthError);
                 if (oauthError.includes('Missing Supabase config')) {

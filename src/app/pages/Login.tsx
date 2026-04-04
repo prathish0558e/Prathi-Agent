@@ -15,7 +15,11 @@ export function Login() {
   const handleGoogleLogin = async () => {
     setError('');
     setIsStarting(true);
-    const { error: oauthError } = await loginWithGoogle();
+    const { error: oauthError } = await loginWithGoogle({
+      forceGmailScopes: true,
+      useDirectOAuth: true,
+      mode: 'login',
+    });
 
     if (oauthError) {
       setError(oauthError);
