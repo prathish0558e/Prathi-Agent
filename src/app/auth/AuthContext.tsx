@@ -3,6 +3,7 @@ import { getOAuthCallbackParams } from '../lib/oauthCallback';
 import { getSupabaseClient } from '../lib/supabaseClient';
 import { hasStoredCareerProfile, loadCareerProfile, saveCareerProfile } from '../lib/profileStorage';
 import { fetchRemoteProfile, saveRemoteProfile } from '../lib/profileApi';
+import { isNativeApp } from '../lib/platform';
 import { runtimeConfig } from '../lib/runtimeConfig';
 import { emptyCareerProfile, type CareerProfile } from '../types/profile';
 
@@ -274,10 +275,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               return { error: `Backend Google OAuth is unreachable at ${runtimeConfig.apiBaseUrl}.` };
             }
 
-            const isNative =
-              typeof window !== 'undefined' &&
-              (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() ===
-                true;
+            const isNative = isNativeApp();
             const returnTo = isNative ? 'com.careersentinel.ai://auth/callback' : window.location.origin;
             const url = `${runtimeConfig.apiBaseUrl}/auth/google/start?returnTo=${encodeURIComponent(returnTo)}&mode=${mode}`;
 
@@ -310,7 +308,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ].join(' ');
         const basicScopes = ['openid', 'email', 'profile'].join(' ');
 
-        const isNative = typeof window !== 'undefined' && (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() === true;
+        const isNative = isNativeApp();
         const redirectTo = isNative
           ? 'com.careersentinel.ai://auth/callback'
           : `${window.location.origin}/#/auth/callback`;
@@ -337,14 +335,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const isLocalAuthUrl = /^(localhost|127\.0\.0\.1)$/i.test(authUrl.hostname);
 
               if (isLocalRedirect || isLocalAuthUrl) {
-                return {
-                  ...result,
-                  error: {
-                    name: 'invalid_redirect',
-                    message:
-                      'Supabase OAuth redirect is pointing to localhost. In Supabase Auth URL Configuration, set Site URL to https://prathi.tech and add Additional Redirect URL: com.careersentinel.ai://auth/callback',
-                  },
-                };
+                authUrl.searchParams.set('redirect_to', 'com.careersentinel.ai://auth/callback');
+                const { Browser } = await import('@capacitor/browser');
+                await Browser.open({ url: authUrl.toString() });
+                return result;
               }
             } catch {
               // Keep default behavior if URL parsing fails.
